@@ -7,7 +7,6 @@ const {
 } = require("../../utils")
 const { sendMailNotification } = require("../../utils/email")
 const createHash = require("../../utils/createHash")
-const { sendSms } = require("../../utils/sms")
 const { AuthFailure, AuthSuccess } = require("./auth.messages")
 const { UserRepository } = require("../user/user.repository")
 
@@ -79,11 +78,11 @@ class AuthService {
 
     const passwordPattern = isValidPassword(newPassword)
 
-     if (!passwordPattern)
-       return {
-         success: false,
-         msg: `Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, 8 characters long.`,
-       }
+    if (!passwordPattern)
+      return {
+        success: false,
+        msg: `Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, 8 characters long.`,
+      }
 
     findUser.password = await hashPassword(newPassword)
     findUser.verificationOtp = ""
