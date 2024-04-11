@@ -6,8 +6,6 @@ class CustomError extends Error {
     super(message)
     this.statusCode = statusCode
     this.errors = errors
-    console.log("message", message)
-    console.log("errors", errors)
   }
 }
 

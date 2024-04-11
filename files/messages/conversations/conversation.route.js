@@ -5,7 +5,7 @@ const {
   updateViewConversationController,
 } = require("./conversation.controller")
 
-// conversationRoute.use(isAuthenticated)
+conversationRoute.use(isAuthenticated)
 
 //routes
 conversationRoute.route("/").get(getConversationsController)
