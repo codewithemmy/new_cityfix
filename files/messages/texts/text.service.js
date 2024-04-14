@@ -65,7 +65,7 @@ class TextService {
     // updating conversation updatedAt so the conversation becomes the most recent
     await ConversationRepository.updateConversation(
       { _id: new mongoose.Types.ObjectId(conversationId) },
-      { updatedAt: new Date() }
+      { updatedAt: new Date(), status: "not-viewed" }
     )
 
     const socketDetails = await SocketRepository.findSingleSocket({
