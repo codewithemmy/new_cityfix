@@ -23,6 +23,18 @@ class UserRepository {
   static async findAllUsersParams(userPayload) {
     const { limit, skip, sort, ...restOfPayload } = userPayload
 
+    if (
+      restOfPayload.accountType &&
+      restOfPayload.accountType === "CityBuilder"
+    ) {
+      const user = await User.find({ ...restOfPayload }, { password: 0 })
+        .sort({ sponsoredRating: -1 })
+        .skip(skip)
+        .limit(limit)
+
+      return user
+    }
+
     const user = await User.find({ ...restOfPayload }, { password: 0 })
       .sort(sort)
       .skip(skip)

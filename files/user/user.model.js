@@ -76,6 +76,10 @@ const userSchema = new mongoose.Schema(
     referralLink: {
       type: String,
     },
+    sponsoredRating: {
+      type: Number,
+      default: 0,
+    },
     usersReferred: [
       {
         type: mongoose.Types.ObjectId,

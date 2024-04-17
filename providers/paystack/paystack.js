@@ -140,6 +140,7 @@ class PaystackPaymentService {
     if (!user) return { success: false, msg: `Payment made by invalid user` }
 
     user.subExpiryDate = currentDate
+    user.sponsoredRating = 5
     await user.save()
 
     return { success: true, msg: TransactionMessages.PAYMENT_SUCCESS }

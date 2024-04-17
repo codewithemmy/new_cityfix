@@ -55,6 +55,24 @@ class ProfileService {
     )
     if (error) return { success: false, msg: error }
 
+    if (userPayload.accountType) {
+      try {
+        const currentDate = new Date()
+        // Find users with subExpiryDate less than current date
+        const usersToUpdate = await UserRepository.findUserWithParams({
+          subExpiryDate: { $lt: currentDate },
+        })
+
+        // Update sponsoredRating field for each user
+        for (const user of usersToUpdate) {
+          user.sponsoredRating = 0
+          await user.save()
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
     const allUsers = await UserRepository.findAllUsersParams({
       ...params,
       limit,
@@ -180,7 +198,6 @@ class ProfileService {
         success: false,
         msg: `Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, 8 characters long.`,
       }
-
 
     user.password = await hashPassword(newPassword)
     const updateUser = await user.save()
