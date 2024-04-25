@@ -61,7 +61,7 @@ class AdminAuthService {
       isAdmin: true,
     })
 
-    // admin.password = undefined
+    admin.password = undefined
     return {
       success: true,
       msg: authMessages.ADMIN_FOUND,
