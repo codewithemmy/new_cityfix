@@ -2,6 +2,7 @@ const { queryConstructor, AlphaNumeric } = require("../../utils")
 const { NotificationService } = require("../notification/notification.service")
 const { ReportFailure, ReportSuccess } = require("./report.messages")
 const { ReportRepository } = require("./report.repository")
+const { sendMailNotification } = require("../../utils/email")
 const mongoose = require("mongoose")
 
 class ReportService {
@@ -81,12 +82,32 @@ class ReportService {
 
     if (!response) return { success: false, msg: ReportFailure.RESPONSE }
 
-    await NotificationService.create({
-      userId: new mongoose.Types.ObjectId(response.reportedUser),
-      recipientId: new mongoose.Types.ObjectId(response.reporterId),
-      message: `Hi, Title: ${title}... Message: ${message}`,
+    const report = await ReportRepository.findSingleReport({
+      _id: new mongoose.Types.ObjectId(response._id),
     })
 
+    try {
+      const substitutional_parameters = {
+        name: report.reporterId.firstName,
+        email: report.reporterId.email,
+        title,
+        message,
+      }
+
+      await sendMailNotification(
+        report.reporterId.email,
+        "Ticket Response",
+        substitutional_parameters,
+        "TICKET_RESPONSE"
+      )
+      await NotificationService.create({
+        userId: new mongoose.Types.ObjectId(response.reportedUser),
+        recipientId: new mongoose.Types.ObjectId(response.reporterId),
+        message: `Hi, Title: ${title}... Message: ${message}`,
+      })
+    } catch (error) {
+      console.log("ticket response error", error)
+    }
     return { success: true, msg: ReportSuccess.RESPONSE }
   }
 }

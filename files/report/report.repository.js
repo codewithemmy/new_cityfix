@@ -15,6 +15,15 @@ class ReportRepository {
       })
   }
 
+  static async findSingleReport(payload, select) {
+    return Report.findOne({ ...payload })
+      .select(select)
+      .populate({
+        path: "reporterId",
+        select: "firstName lastName name email profileImage accountType",
+      })
+  }
+
   static async validateReport(payload) {
     return Report.exists({ ...payload })
   }
@@ -65,7 +74,7 @@ class ReportRepository {
         _id: new mongoose.Types.ObjectId(_id),
       }
 
-      //  const report = await Report.find()
+    //  const report = await Report.find()
     const report = await Report.aggregate([
       {
         $addFields: {
