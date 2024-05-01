@@ -2,15 +2,13 @@ const jwt = require("jsonwebtoken")
 const { PAGE_LENGTH } = require("../constants/index")
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
-const crypto = require("crypto")
-// const { RedisClient } = require("./redis")
 
 const COUNTRY_CODE = "234"
 
 const tokenHandler = async (payload) => {
   try {
     const token = jwt.sign({ ...payload }, process.env.JWT_SECRET, {
-      expiresIn: "365d",
+      expiresIn: process.env.JWT_LIFETIME,
     })
     return { token }
   } catch (error) {
@@ -156,7 +154,7 @@ const verifyToken = async (token) => {
   try {
     return jwt.verify(token, process.env.JWT_SECRET)
   } catch (error) {
-    c
+    throw new Error("Unable to verify token.")
   }
 }
 
