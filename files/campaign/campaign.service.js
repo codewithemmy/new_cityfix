@@ -11,12 +11,26 @@ const { UserRepository } = require("../user/user.repository")
 class CampaignService {
   static async createCampaignService(payload, locals) {
     const { image, body } = payload
+
+    if (!body.campaignType)
+      return {
+        success: false,
+        msg: `Campaign type cannot be empty`,
+      }
+
     const { accountType, title, campaign } = body
     const newCampaign = await CampaignRepository.create({
       ...body,
       image,
       userId: locals._id,
     })
+
+    if (body.campaignType === "blog") {
+      return {
+        success: true,
+        msg: `Blog successfully created`,
+      }
+    }
 
     let mappedUsers
 
@@ -108,7 +122,7 @@ class CampaignService {
 
   static async editCampaignService(payload, id) {
     const { image, body } = payload
-    
+
     const campaign = await CampaignRepository.fetchAndUpdateCampaign(id, {
       image,
       ...body,
