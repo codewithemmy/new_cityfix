@@ -16,6 +16,7 @@ const tokenHandler = async (payload) => {
   }
 }
 
+//admin verifier
 const adminVerifier = (req, res, next) => {
   if (res.locals.jwt.isAdmin) {
     //res.locals.jwt is got from the isAuthenticated middleware
